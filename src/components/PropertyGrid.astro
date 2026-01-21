@@ -37,7 +37,7 @@ const PriceFmt = new Intl.NumberFormat("en-GB", {
                         To inquirie about this property, <a class="underline italic" target="email" href={`mailto:info@maisonvictoire.com?subject=Inquiry:%20${property.data.reference}%20-%20${property.data.city}`}>send us an email</a> and we will respond as soon as possible.
                     </div>
             </div>
-            <a href={property.data.status === "confidential" ? `#${property.id}` : `/properties/${property.id}`}>
+            <a name={property.id} href={property.data.status === "confidential" ? `#${property.id}` : `/properties/${property.id}`}>
             <Thumbnail
                 src={property.data.images[0]}
                 alt={property.data.title}
@@ -45,20 +45,20 @@ const PriceFmt = new Intl.NumberFormat("en-GB", {
                 loading={index >= 8 ? `lazy`:`eager`}
                 fetchpriority={index < 8 ? `high`:`auto`}
             >
-                <div class="h-full font-light">
+                <div class="-x-h-full flex flex-col font-light">
                 <h5 class=" text-balance">{property.data.city}</h5>
                 <div>
                     <p class="text-sm min-h-15">
                         {property.data.summary}
                     </p>
                 </div>
-                <div class="grid grid-cols-2 gap-2 items-center">
+                <div class="grid grid-cols-2 gap-2 items-end">
                     <p class="text-sm italic mb-2!">
                         <span>Living area: {property.data.living_area} m<sup>2</sup></span><br>
                         <span>Bedrooms: {property.data.rooms}</span>
                     </p>
                     <p class="price-status text-right font-normal text-lg mb-2!">
-                        { {sold:"SOLD",confidential:"CONFIDENTIAL SALE",pending:"PENDING SALE",available:`${PriceFmt.format(property.data.price)} €`}[property.data.status]}
+                        { {sold:"SOLD",confidential:"CONFIDENTIAL",pending:"PENDING SALE",available:`${PriceFmt.format(property.data.price)} €`}[property.data.status]}
                     </p>
                 </div>
             </Thumbnail>
