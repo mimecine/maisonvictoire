@@ -1,0 +1,20 @@
+---
+import { getCollection } from "astro:content";
+import Main from "@src/layouts/Main.astro";
+import PropertyGrid from "@src/components/PropertyGrid.astro";
+
+
+
+let properties = await getCollection("properties");
+properties = properties
+  .filter((property) => !property.data.draft && property.data.status === 'sold')
+  .sort((a, b) => b.data.reference.localeCompare(a.data.reference));
+---
+
+<Main title="Maison Victoire: Sold Properties">
+  <main data-pagefind-ignore>
+    <section>
+      <PropertyGrid properties={properties} />
+    </section>
+  </main>
+</Main>

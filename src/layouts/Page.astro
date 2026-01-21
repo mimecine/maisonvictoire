@@ -1,0 +1,34 @@
+---
+import { type CollectionEntry, getCollection, getEntry } from "astro:content";
+import { Image } from "astro:assets";
+import Main from "./Main.astro";
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  frontmatter?: Record<string, unknown>;
+}
+
+let { title, description, image, frontmatter, ...props } = Astro.props;
+title = title || (typeof frontmatter?.title === "string" ? frontmatter.title : "") || " ";
+title = `Maison Victoire - ${title}`;
+---
+
+<!-- <style>
+  @reference "../styles/global.css";
+
+  .markdown-doc {
+    img {
+      @apply p-2 bg-gray-100;
+    }
+  }
+</style> -->
+<Main title={title} description={description} image={image}>
+  <main>
+    <section>
+      <div class="markdown-doc columns-1  gap-6 pt-4 max-w-4xl m-auto">
+        <slot />
+      </div>
+    </section>
+  </main>
+</Main>

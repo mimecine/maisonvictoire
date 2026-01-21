@@ -1,0 +1,55 @@
+---
+import { getCollection } from "astro:content";
+import Main from "@src/layouts/Main.astro";
+import PropertyGrid from "@src/components/PropertyGrid.astro";
+
+let properties = (await getCollection("properties"))
+  .filter((property) => !property.data.draft);
+
+let selected = properties.filter(p => !p.data.draft).splice(0,48).sort(()=>[-1,1][Math.floor(Math.random()*2)]);
+export const prerender = false;
+---
+
+<Main title="Maison Victoire">
+  <main data-pagefind-ignore>
+    <section>
+      <PropertyGrid properties={selected.splice(0, 8)} />
+      <div class="text-center mt-8">
+        <a
+          href="/properties"
+          class="inline-block border px-4 py-2 border-gray-300 hover:bg-gray-100 transition"
+          >View All Available Properties</a
+        >
+        <a
+          href="/properties/sold"
+          class="inline-block border border-gray-300 px-4 py-2 hover:bg-gray-100 transition"
+          >View All Sold Properties</a
+        >
+      </div>
+    </section>
+  </main>
+</Main>
+<style>
+  @reference "../styles/global.css";
+  .status-sold {
+    .thumbnail-container {
+    }
+    img {
+      @apply grayscale-100 contrast-150;
+    }
+    .thumbnail-container {
+      @apply bg-red-600/70;
+    }
+    .price-status {
+      @apply text-red-400 italic;
+    }
+  }
+  .status-confidential {
+    .thumbnail-container {
+      @apply bg-yellow-600/50;
+    }
+    .price-status {
+      @apply text-yellow-600 italic;
+    }
+  }
+</style>

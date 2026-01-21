@@ -1,0 +1,114 @@
+---
+import { ClientRouter } from "astro:transitions";
+import BaseHead from "@src/components/BaseHead.astro";
+import Footer from "@src/components/Footer.astro";
+import HeaderLink from "@src/components/HeaderLink.astro";
+import CookieConsent from "@src/components/CookieConsent.astro";
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import { fade } from "astro:transitions";
+import Logo from "@src/assets/logo-menu-eng.png";
+
+interface Props {
+  title: string;
+  heading?: string;
+  description?: string;
+  image?: string;
+  cloak?: boolean;
+  frontmatter?: Record<string, unknown>;
+}
+
+let { title, heading, description, image, cloak, frontmatter, ...props } = Astro.props;
+
+---
+
+<html lang="en-GB" class="bg-(--main-background)">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <BaseHead title={title} description={description} image={image} />
+    <ClientRouter />
+  </head>
+  <body
+    class="h-lvh w-lvw grid grid-rows-[1fr_auto] bg-(--main-background)"
+    x-data="{}">
+    <nav
+      class="flex items-center justify-between fixed print:relative px-2 h-14 lg:h-28 lg:px-4 py-2 lg:pt-4 lg:pb-2 border-b border-gray-500 bg-(--main-background) w-full z-500">
+      <div class="flex items-center">
+        <a href="/" class="home border-b-0 pr-4 lg:pr-12">
+          <Image
+            src={Logo}
+            alt="Artist Maison Victoire Estate Agents"
+            widths={[102, 186]}
+            sizes="(max-width: 1024px) 102px,186px"
+            class="h-10! lg:h-18! w-auto"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </a>
+        <h1 class="text-sm md:text-lg lg:text-4xl font-extralight text-balance">
+          {heading && <a href="#top">{heading?.trim()}</a>}
+        </h1>
+      </div>
+      <div
+        class="flex flex-col justify-between lg:flex-row print:hidden lg:gap-0 font-light">
+        <HeaderLink href="/properties/" class="hidden lg:inline-block"
+          >Available Properties</HeaderLink
+        >
+        <div class="ml-2">&centerdot;</div>
+        <HeaderLink href="/properties/sold" class="hidden lg:inline-block">Sold Properties</HeaderLink
+        >
+        <div class="ml-2">&centerdot;</div>
+        <HeaderLink href="/staff" class="hidden lg:inline-block">Staff</HeaderLink
+        >
+        <div class="ml-2">&centerdot;</div>
+        <HeaderLink href="/about" class="hidden lg:inline-block">About</HeaderLink
+        >
+
+        <div
+          x-data="{ open: false}"
+          class="*:bg-(--main-background) *:z-500000 z-500000">
+          <h1 @click="open = ! open" class="block lg:hidden text-[1.5rem]">
+            <Icon
+              name="material-symbols-light:menu"
+              class="size-12 lg:size-24"
+            />
+          </h1>
+          <div
+            x-cloak
+            x-show="open"
+            x-transition
+            class="lg:hidden absolute top-14 right-0 border border-t-0 border-r-0 border-gray-500 flex flex-col items-end *:p-1 gap-2 p-4">
+            <HeaderLink href="/">Available</HeaderLink>
+            <HeaderLink href="/sold">Sold</HeaderLink>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="grid justify-items-center print:py-12">
+      <article
+        class="p-2 pt-16 lg:p-4 lg:pt-32 print:pt-2 max-w-(--breakpoint-2xl) w-full"
+        {...props}>
+        <slot />
+      </article>
+    </div>
+    <Footer />
+    <CookieConsent />
+  </body>
+</html>
+<style is:global>
+  @reference "../styles/global.css";
+
+  :root {
+    @apply scroll-smooth;
+  }
+</style>
+<!-- <script>
+  document.addEventListener('astro:before-swap', (event) => {
+    event.newDocument.documentElement.style.scrollBehavior =
+      event.navigationType === 'traverse' ? 'auto' : 'smooth';
+    event.viewTransition.updateCallbackDone.finally(() => {
+      document.documentElement.style.scrollBehavior = 'smooth';
+    });
+  });
+</script> -->

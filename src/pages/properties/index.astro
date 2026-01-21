@@ -1,0 +1,115 @@
+---
+import { getCollection } from "astro:content";
+import Main from "@src/layouts/Main.astro";
+import PropertyGrid from "@src/components/PropertyGrid.astro";
+
+let properties = await getCollection("properties");
+properties = properties
+  .filter((property) => !property.data.draft && property.data.status !== "sold")
+  .sort((a, b) => b.data.reference.localeCompare(a.data.reference));
+---
+<script is:inline>
+  const sortFuncMap = {
+    "price-asc": (a, b) =>
+      parseInt(a.dataset.price) - parseInt(b.dataset.price),
+    "price-desc": (a, b) =>
+      parseInt(b.dataset.price) - parseInt(a.dataset.price),
+    "living_area-asc": (a, b) =>
+      parseInt(a.dataset.living_area) - parseInt(b.dataset.living_area),
+    "living_area-desc": (a, b) =>
+      parseInt(b.dataset.living_area) - parseInt(a.dataset.living_area),
+    "rooms-asc": (a, b) =>
+      parseInt(a.dataset.rooms) - parseInt(b.dataset.rooms),
+    "rooms-desc": (a, b) =>
+      parseInt(b.dataset.rooms) - parseInt(a.dataset.rooms),
+    "date-asc": (a, b) =>
+      a.dataset.reference.localeCompare(b.dataset.reference),
+    "date-desc": (a, b) =>
+      a.dataset.reference.localeCompare(b.dataset.reference) * -1,
+  };
+  const getSortFunction = (key) => sortFuncMap[key] || null;
+
+  const filterFuncMap = {
+    // 'status': (item, value) => item.dataset.status === value || value === '',
+    // 'rooms': (item, value) => parseInt(item.dataset.rooms) >= parseInt(value) || value === '',
+    // 'baths': (item, value) => parseInt(item.dataset.baths) >= parseInt(value) || value === '',
+    price_min: (item, value) =>
+      parseInt(item.dataset.price) >= parseInt(value) || value === null,
+    price_max: (item, value) =>
+      parseInt(item.dataset.price) <= parseInt(value) || value === null,
+    price_min_max: (item, min, max) =>
+      (min === null || parseInt(item.dataset.price) >= parseInt(min)) &&
+      (max === null || parseInt(item.dataset.price) <= parseInt(max)),
+  };
+  const getFilterFunction = (key) => filterFuncMap[key] || null;
+
+  const sortDOMList = (el, sortfunc) => {
+    const items = Array.from(el.children);
+    items.sort(sortfunc);
+    items.forEach((item) => el.appendChild(item));
+  };
+
+  const filterDOMList = (el, filterfunc, ...args) => {
+    const items = Array.from(el.children);
+    items.forEach((item) => {
+      if (filterfunc(item, ...args)) {
+        item.style.display = "";
+      } else {
+        item.style.display = "none";
+      }
+    });
+  };
+
+  // sortDOMList(document.querySelector('ul.propertygrid'),getSortFunction('price-desc'))
+  // filterDOMList(document.querySelector('ul.propertygrid'),getFilterFunction('price_min_max'),800000,900000)
+</script>
+<Main title="Maison Victoire: Available Properties">
+  <main data-pagefind-ignore>
+    <section
+      class="grid items-center gap-4 pb-4 lg:px-[30vw]"
+      x-data="{properties:null,sort_by:$persist('')}"
+      x-init="properties = document.querySelector('.propertygrid');sortDOMList(properties,getSortFunction(sort_by))">
+      <select
+        x-model="sort_by"
+        id="sort_by"
+        class="p-2 border border-gray-300 ring-0 outline-none text-center appearance-none"
+        @change="sortDOMList(properties,getSortFunction(sort_by))">
+        <option value="date-desc">Latest Listings</option>
+        <option value="date-asc">Oldest Listings</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+        <option value="living_area-asc">Living Area: Low to High</option>
+        <option value="living_area-desc">Living Area: High to Low</option>
+        <option value="rooms-asc">Rooms: Low to High</option>
+        <option value="rooms-desc">Rooms: High to Low</option>
+      </select>
+    </section>
+    <section>
+      <PropertyGrid properties={properties} />
+    </section>
+  </main>
+</Main>
+
+
+
+<style>
+  @reference "../../styles/global.css";
+  .status-sold {
+    .thumbnail-container {
+    }
+    img {
+      @apply grayscale-100 contrast-150;
+    }
+    .price-status {
+      @apply text-red-400 italic;
+    }
+  }
+  .status-confidential {
+    .thumbnail-container {
+      @apply bg-yellow-600/50;
+    }
+    .price-status {
+      @apply text-yellow-600 italic;
+    }
+  }
+</style>

@@ -1,0 +1,42 @@
+---
+import { getCollection } from "astro:content";
+import Main from "../layouts/Main.astro";
+import Thumbnail from "@src/components/Thumbnail.astro";
+import { Image } from "astro:assets";
+import { marked } from "marked";
+const staffMembers = await getCollection("staff");
+---
+
+<Main
+  title="Maison Victoire - Staff"
+  description="Meet the team behind Maison Victoire">
+  <section class="max-w-4xl mx-auto px-4 py-16">
+    {
+      staffMembers
+        .sort((a, b) => b.data.page_order - a.data.page_order)
+        .map((member, i) => (
+          <div class="mb-12">
+            {member.data.photo && (
+              <Image
+                src={member.data.photo}
+                alt={`Photo of ${member.data.name}`}
+                width={300}
+                height={300}
+                class=" mb-2 p-2 bg-gray-100"
+                class:list={[
+                  i % 2 === 0
+                    ? "md:float-left md:mr-4"
+                    : "md:float-right md:ml-4",
+                ]}
+              />
+            )}
+            <h2 class="text-2xl font-thin">{member.data.name}</h2>
+            <p class="text-gray-600 italic">{member.data.position}</p>
+            {member.body && (
+              <div class="mt-4" set:html={marked.parse(member.body)} />
+            )}
+          </div>
+        ))
+    }
+  </section></Main
+>

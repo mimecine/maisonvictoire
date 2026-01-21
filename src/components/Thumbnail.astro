@@ -1,0 +1,22 @@
+---
+import { Image } from 'astro:assets';
+
+const { src, alt, title, loading, href, width, widths, sizes, ...props } = Astro.props;
+---
+    <div class="h-full" >
+        <div class={`thumbnail-container w-full bg-gray-100 h-64 flex justify-center items-center bg-no-repeat bg-center bg-[url('/SvgSpinners180RingWithBg.svg')]}`} style={`background-size: 20%`}>
+            {src && <Image
+                width={width || undefined}
+                widths={widths ||[480]}
+                sizes="480px"
+                src={src}
+                alt={alt || ""}
+                loading={loading || "lazy"}
+                class={`thumbnail max-w-full h-full! w-auto object-contain p-2 opacity-0 transition-opacity duration-500`}
+                onload="this.classList.remove('opacity-0')"
+                {...props}
+                /> 
+            }
+        </div>
+        <slot/>
+    </div>

@@ -1,0 +1,191 @@
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms/schema/sveltia-cms.json
+
+site_url: https://maisonvictoire.mimecom.net/
+display_url: /
+logo: 
+  src: /favicon.svg
+
+backend:
+  name: github
+  repo: mimecine/maisonvictoire
+  branch: master # Branch to update (optional; defaults to master)
+  base_url: https://cms-auth.mimecom.workers.dev/ # Github OAuth Proxy URL where it's hosted. In use, https://github.com/sveltia/sveltia-cms-auth
+
+media_folder: "src/media"
+
+media_libraries:
+  default:
+    config:
+      max_file_size: 1000000000
+      slugify_filename: true
+      transformations:
+        raster_image: # original format
+          format: webp # new format, only `webp` is supported
+          quality: 85 # default: 85
+          width: 2048 # default: original size
+          height: 2048 # default: original size
+        svg:
+          optimize: true
+  stock_assets:
+    providers: []
+
+
+
+collections:
+        
+  - label: "Properties"
+    label_singular: "Property"
+    name: "properties"
+    folder: "src/content/properties"
+    create: true
+    summary: "{{fields.reference}} — {{fields.city}} - {{fields.status}}"
+    sortable_fields:
+      fields: ["title", "reference", "price", "rooms", "city"]
+      default:
+        field: "reference"
+        direction: Descending
+    editor:
+      preview: false
+    thumbnail: "images.0"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Reference", name: "reference", widget: "string" }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false }
+      - label: "Status"
+        name: "status"
+        widget: "select"
+        options:
+          - { label: "Available", value: "available" }
+          - { label: "Sold", value: "sold" }
+          - { label: "Pending", value: "pending" }
+          - { label: "Confidential", value: "confidential" }
+        default: "available"
+      - { label: "City", name: "city", widget: "string" }
+      - { label: "ZIP", name: "zip", widget: "string", required: false }
+      - { label: "Price", name: "price", widget: "number" }
+      - { label: "Rooms", name: "rooms", widget: "number", required: false }
+      - { label: "Baths", name: "baths", widget: "number", required: false }
+      - { label: "Swimming Pool", name: "swimming_pool", widget: "boolean", default: false }
+      - { label: "Living Area (m²)", name: "living_area", widget: "number", required: false }
+      - { label: "Land Area (m²)", name: "land_area", widget: "number", required: false }
+      - { label: "Property Tax", name: "property_tax", widget: "number", required: false }
+      - { label: "Body", name: "body", widget: "markdown", required: false }
+      - { label: "Summary", name: "summary", widget: "markdown", required: false }
+      - label: "Images"
+        name: "images"
+        widget: "image"
+        multiple: true
+      - label: "Floorplans"
+        name: "floorplans"
+        widget: "image"
+        multiple: true
+      - label: "Videos"
+        label_singular: "Video"
+        name: "videos"
+        widget: "list"
+      - label: "Meta"
+        name: "meta"
+        widget: "object"
+        required: false
+        fields:
+          - { label: "Original URL", name: "originalUrl", widget: "string", required: false }
+          - { label: "Fetched At", name: "fetchedAt", widget: "datetime", required: false }
+
+
+  - label: "Pages"
+    label_singular: "Page"
+    name: "pages"
+    preview_path: "{{slug}}"
+    folder: "src/pages"
+    create: true
+    editor:
+      preview: true
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - {
+          name: "layout",
+          widget: "hidden",
+          default: "@src/layouts/Page.astro",
+        }
+      - { label: "Featured Image", name: "image", widget: "image", required: false, hint: "Used for SEO and social sharing only." }
+      - { label: "Description", name: "description", widget: "string", required: false, hint: "Used for SEO and social sharing only." }
+      - { label: "Body", name: "body", widget: "markdown" }
+  
+  - label: "Staff"
+    label_singular: "Staff Member"
+    name: "staff"
+    folder: "src/content/staff"
+    create: true
+    summary: "{{fields.name}} - {{fields.position}}"
+    editor:
+      preview: false
+    thumbnail: "photo"
+    slug: "{{fields.name | slugify}}"
+    fields:
+      - { label: "Name", name: "name", widget: "string" }
+      - { label: "Position", name: "position", widget: "string", required: false }
+      - { label: "Page Order", name: "page_order", widget: "number", default: 0, hint: "Determines the order of staff members on the staff page." }
+      - { label: "Email", name: "email", widget: "string", required: false }
+      - { label: "Phone", name: "phone", widget: "string", required: false }
+      - { label: "Photo", name: "photo", widget: "image", required: false }
+      - { label: "Bio", name: "body", widget: "markdown", required: false }  
+
+  # - label: "Site Settings"
+  #   name: "settings"
+  #   editor:
+  #     preview: false
+  #   files:
+
+  #     - label: "Homepage Sections"
+  #       name: "homepage_sections"
+  #       file: "src/_data/homepage_sections.json"
+  #       fields:
+  #         - label: "Sections"
+  #           name: sections
+  #           widget: list
+  #           collapsed: false
+  #           types:
+  #             - *freeform
+  #             - *current_rooms
+  #             - *featured_rooms
+  #             - *featured_artists
+  #             - *featured_films
+  #             - *room
+  #             - *artist
+  #             - *film
+  #             # - *carousel
+
+  #     - label: "Footer"
+  #       name: "footer"
+  #       file: "src/_data/footer_settings.json"
+  #       media_folder: "/public/media"
+  #       public_folder: "/media"
+  #       fields:
+  #         - label: "Footer Items"
+  #           name: links
+  #           widget: list
+  #           collapsed: false
+  #           fields:
+  #             - { label: Title, name: title, widget: string }
+  #             - { label: URL, name: url, widget: string }
+  #             - { label: Image, name: image, widget: image, required: false}
+  #             - {
+  #                 label: Alt,
+  #                 name: desc,
+  #                 widget: string,
+  #                 required: false,
+  #               }
+  #     - label: "General Settings"
+  #       name: "settings"
+  #       file: "src/_data/meta_settings.json"
+  #       fields:
+  #         - { label: Site Title, name: name, widget: string }
+  #         - { label: Site Author, name: author, widget: string }
+  #         - { label: URL, name: url, widget: string }
+  #         - { label: Description, name: description, widget: string }
+  #         - { label: Keywords, name: keywords, widget: string, required: false }
+  #         - { label: "Logo", name: logo, widget: image, required: false }
+  #         - { label: "Favicon", name: favicon, widget: image, required: false }
+  #         - { label: "Set a password to bar casual visitors", name: password, widget: string, required: false }
+
+

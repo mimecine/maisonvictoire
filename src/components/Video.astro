@@ -1,0 +1,79 @@
+---
+import { Image } from "astro:assets";
+import type { HTMLAttributes } from "astro/types";
+import { extract } from "@extractus/oembed-extractor";
+import { Icon } from "astro-icon/components";
+
+type Props = HTMLAttributes<"img">;
+
+const { src, alt, title, class: className, ...props } = Astro.props;
+
+let film, id, url, embed, thumb, width, height, vtitle, fault, err;
+
+if (src?.includes("vimeo")) {
+  let id = src.replace(
+    /(?:http:|https:|)\/\/(?:player.|www.)?vimeo\.com\/(?:video\/|embed\/|watch\?\S*v=|v\/)?(\d*)(?:.*)/gim,
+    "$1"
+  );
+  url = `https://vimeo.com/${id}`;
+  embed = `https://player.vimeo.com/video/${id}?app_id=122963`;
+} else if (src?.includes("youtube")) {
+  let id = src.replace(
+    /(?:http:|https:|)\/\/(?:www\.|)youtube\.com\/(?:watch\?.*(?:|\&)v=|embed\/|v\/|watch\?.*?\bv=)([^#\&\?]*).*/gim,
+    "$1"
+  );
+  url = `https://youtube.com/watch?v=${id}`;
+  embed = `https://www.youtube.com/embed/${id}`;
+}
+
+---
+
+
+<div
+  class="h-full cursor-pointer"
+  onclick="this.querySelector('dialog').showModal()"
+>
+  <div class="w-full bg-gray-200 h-64 flex justify-center items-center bg-no-repeat bg-center bg-[url('/SvgSpinners180RingWithBg.svg')]" x-data={`{poster:null}`} x-init={`poster =  await $getPoster('${url}')`}>
+    <img
+      :src="poster"
+      alt={alt || title || "Video thumbnail"}
+      x-show="poster"
+      x-transition:enter="transition ease-out duration-1000"
+      x-transition:enter-start="opacity-0"
+      x-transition:enter-end="opacity-100"
+      width="360"
+      height="202"
+      class="max-w-full !h-full w-auto object-contain p-2 opacity-0 transition-opacity duration-500"
+      onload="this.classList.remove('opacity-0')"
+      loading="lazy"
+    />
+
+
+  </div>
+  <slot />
+  <dialog
+    x-data="{open:false}"
+    @keyup.escape.window="$el.close()"
+    class="w-lvh h-lvh m-auto bg-black/90 backdrop:bg-gray-800/80"
+    onclose="console.log('closing dialog');this.querySelector('iframe').src = ''; setTimeout(()=>{this.querySelector('iframe').src = this.querySelector('iframe').dataset.src; console.log(this.querySelector('iframe').src)},500);"
+  >
+    <form method="dialog">
+      <button
+        class="absolute right-8 lg:right-2 top-8 lg:top-2 focus-visible:outline-hidden text-white p-0 pb-28 pl-28"
+        type="submit"
+      >
+        <Icon name="material-symbols-light:close-rounded" class="size-12 lg:size-12" />
+      </button>
+    </form>
+    <div class="h-full w-full inset-0 grid place-items-center p-4 lg:p-4">
+      <iframe
+        width="100%" height="100%"
+        class="w-full h-auto aspect-video object-contain bg-gray bg-no-repeat bg-center bg-[url('/SvgSpinners180RingWithBg.svg')]"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+        loading="lazy"
+        src={embed}
+        data-src={embed}></iframe>
+    </div>
+  </dialog>
+</div>

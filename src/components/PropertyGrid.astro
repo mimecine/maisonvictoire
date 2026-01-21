@@ -1,0 +1,90 @@
+---
+import { type CollectionEntry, getCollection, render} from "astro:content";
+import type { HTMLAttributes } from "astro/types";
+import Thumbnail from "@src/components/Thumbnail.astro";
+interface Props extends HTMLAttributes<"li"> {
+  properties: CollectionEntry<'properties'>[];
+}
+const {properties, ...attrs} = Astro.props;
+
+const PriceFmt = new Intl.NumberFormat("en-GB", {
+  style: "currency",
+  currency: "EUR",
+  maximumFractionDigits: 0,
+});
+---
+<ul class="propertygrid grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 justify-between">
+    {
+        properties.map((property, index: number) => (
+        <li {...attrs} 
+            x-data={`{reference: '${property.data.reference}', status: '${property.data.status}', showInfo: false }`}
+            @click="if(status === 'confidential'){ showInfo = !showInfo}" 
+            @click.outside="showInfo = false"
+            x-transition 
+            x-cloak
+            class="relative"
+            class:list={[`status-${property.data.status}`]} 
+            data-reference={property.data.reference} 
+            data-city={property.data.city} 
+            data-rooms={property.data.rooms} 
+            data-baths={property.data.baths} 
+            data-living_area={property.data.living_area} 
+            data-price={property.data.price} 
+            data-status={property.data.status} 
+            data-land_area={property.data.land_area} >
+            <div x-cloak x-show="showInfo" class="absolute grid items-center inset-0 bg-yellow-400 text-(--main-text) px-2 py-1 text-sm font-light border border-gray-400">
+                    <div class="w-2/3 m-auto text-xl">
+                        To inquirie about this property, <a class="underline italic" target="email" href={`mailto:info@maisonvictoire.com?subject=Inquiry:%20${property.data.reference}%20-%20${property.data.city}`}>send us an email</a> and we will respond as soon as possible.
+                    </div>
+            </div>
+            <a href={property.data.status === "confidential" ? `#${property.id}` : `/properties/${property.id}`}>
+            <Thumbnail
+                src={property.data.images[0]}
+                alt={property.data.title}
+                title={property.data.title} 
+                loading={index >= 8 ? `lazy`:`eager`}
+                fetchpriority={index < 8 ? `high`:`auto`}
+            >
+                <div class="h-full font-light">
+                <h5 class=" text-balance">{property.data.city}</h5>
+                <div>
+                    <p class="text-sm min-h-15">
+                        {property.data.summary}
+                    </p>
+                </div>
+                <div class="grid grid-cols-2 gap-2 items-center">
+                    <p class="text-sm italic mb-2!">
+                        <span>Living area: {property.data.living_area} m<sup>2</sup></span><br>
+                        <span>Bedrooms: {property.data.rooms}</span>
+                    </p>
+                    <p class="price-status text-right font-normal text-lg mb-2!">
+                        { {sold:"SOLD",confidential:"CONFIDENTIAL SALE",pending:"PENDING SALE",available:`${PriceFmt.format(property.data.price)} €`}[property.data.status]}
+                    </p>
+                </div>
+            </Thumbnail>
+            </a>
+        </li>
+        ))
+    }
+</ul>
+<style>
+  @reference "../styles/global.css";
+  .status-sold {
+    .thumbnail-container {
+    }
+    img {
+      @apply grayscale-100 contrast-150;
+    }
+    .price-status {
+      @apply text-red-400 italic;
+    }
+  }
+  .status-confidential {
+    .thumbnail-container {
+      @apply bg-yellow-600/50;
+    }
+    .price-status {
+      @apply text-yellow-600 italic;
+    }
+  }
+</style>

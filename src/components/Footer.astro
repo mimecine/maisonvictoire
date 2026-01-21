@@ -1,0 +1,22 @@
+---
+const today = new Date();
+---
+
+<footer
+  class="flex flex-flow-row justify-center items-center gap-8 p-2 text-center text-gray-700 text-sm print:text-xs print:gap-0 print:p-1 border-t border-gray-500">
+  <div>
+    &copy; Maison Victoire {today.getFullYear()} · Place de l'Ancienne Mairie · 84220 CABRIERES D'AVIGNON · +33 (0)490 05 01 54 · client@maisonvictoire.com · SIREN 522 872 092
+  </div>
+</footer>
+
+<style>
+
+  @media print {
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+    }
+  }
+</style>

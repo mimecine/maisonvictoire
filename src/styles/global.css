@@ -1,0 +1,270 @@
+@import "tailwindcss";
+
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+
+@theme {
+  --color-accent: var(--accent);
+  --color-accent-dark: var(--accent-dark);
+  --color-black: var(--black);
+  --color-gray: var(--gray);
+  --color-gray-light: var(--gray-light);
+  --color-gray-dark: var(--gray-dark);
+  --color-gray-gradient: var(--gray-gradient);
+  --color-box-shadow: var(--box-shadow);
+  --color-main-background: var(--main-background);
+  --font-default: var(--font-family);
+  --font-sans: var(--font-family), var(--font-sans);
+  --font-serif: var(--font-serif);
+  --font-mono: var(--font-mono);
+
+  --font-heading: var(--font-family);
+  --font-body: var(--font-family);
+  --color-body: var(--gray-dark);
+  --color-heading: var(--black);
+
+  --cursor-ar-default: url("/cursor-default.svg") 12 12, auto;
+  --cursor-ar-pointer: url("/cursor-pointer.svg") 12 12, pointer;
+
+  --animate-blink: blink 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+  @keyframes blink {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+}
+
+@utility scrollbar-hide {
+  /* Firefox */
+  scrollbar-width: none;
+
+  /* Safari and Chrome */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility scrollbar-default {
+  /* Firefox */
+  scrollbar-width: auto;
+
+  /* Safari and Chrome */
+  &::-webkit-scrollbar {
+    display: block;
+  }
+}
+
+@utility animate-* {
+  animation-iteration-count: --value(integer);
+}
+
+@layer base {
+  :focus-visible {
+    @apply block animate-pulse animate-2 outline-2 outline-accent outline-offset-2;
+  }
+}
+/*@layer base {*/
+
+@import "@fontsource-variable/jost";
+@import "@fontsource-variable/work-sans";
+
+
+@font-face {
+  font-family: fredoka-fallback;
+  src: local("Arial");
+  /* size-adjust: 59.07%; */
+  ascent-override: 97.4%;
+  descent-override: 23.6%;
+  line-gap-override: 0%;
+}
+
+:root {
+  --accent: #696969;
+  --accent-dark: #282828;
+  --black: 15, 18, 25;
+  --gray: 96, 115, 159;
+  --gray-light: 229, 233, 240;
+  --gray-dark: 34, 41, 57;
+  --gray-gradient: rgba(var(--gray-light), 50%), #fff;
+  --box-shadow:
+    0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%),
+    0 16px 32px rgba(var(--gray), 33%);
+  --main-background: rgb(255, 255, 255);
+  --font-family:
+    "Work Sans Variable", "Jost Variable", fredoka-fallback, sans-serif;
+}
+
+[x-cloak] {
+  display: none !important;
+}
+
+body:has(dialog[open]) {
+  overflow: hidden;
+}
+
+dialog:modal {
+  max-width: 100dvw;
+  max-height: 100dvh;
+  /* width: calc(100vw - 1em);
+	height: calc(100vh - 1em); */
+  @apply h-full w-full lg:h-[calc(100dvh-1em)] lg:w-[calc(100dvw-1em)];
+}
+
+li:empty {
+  display: none;
+}
+
+p:first-of-type {
+  margin-top: -0.5rem;
+}
+body {
+  @apply text-sm font-light lg:text-xl print:text-xs text-gray-dark font-default m-0 p-0 text-left bg-main-background wrap-break-word;
+}
+main {
+  @apply m-auto;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  /* margin: 0 0 0.5rem 0;
+  color: rgb(var(--black));
+  line-height: 1.2; */
+  @apply text-black m-0 mb-0.5 tracking-tight;
+}
+h1 {
+  @apply text-2xl lg:text-5xl print:text-4xl;
+}
+h2 {
+  font-size: 2.441em;
+}
+h3 {
+  font-size: 1.953em;
+}
+h4 {
+  font-size: 1.563em;
+}
+h5 {
+  font-size: 1.25em;
+}
+strong,
+b {
+  font-weight: 700;
+}
+a {
+  color: var(--accent);
+}
+a:hover {
+  color: rgb(201, 77, 254);
+  opacity: 30;
+  transition: all;
+  transition-duration: 100ms;
+}
+p {
+  margin-bottom: 1em;
+}
+.prose {
+  p, ul {margin-bottom: 2em;}
+}
+textarea {
+  width: 100%;
+  font-size: 16px;
+}
+input {
+  font-size: 16px;
+}
+table {
+  width: 100%;
+}
+img {
+  max-width: 100%;
+  height: auto;
+}
+code {
+  padding: 2px 5px;
+  background-color: rgb(var(--gray-light));
+  border-radius: 2px;
+}
+pre {
+  padding: 1.5em;
+  border-radius: 8px;
+}
+pre > code {
+  all: unset;
+}
+blockquote {
+  border-left: 4px solid var(--accent);
+  padding: 0 0 0 20px;
+  margin: 0px;
+  font-size: 1.333em;
+}
+hr {
+  border: none;
+  border-top: 1px solid rgb(var(--gray-dark));
+}
+
+.sr-only {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  /* IE6, IE7 - a 0 height clip, off to the bottom right of the visible 1px box */
+  clip: rect(1px 1px 1px 1px);
+  /* maybe deprecated but we need to support legacy browsers */
+  clip: rect(1px, 1px, 1px, 1px);
+  /* modern browsers, clip-path works inwards from each corner */
+  clip-path: inset(50%);
+  /* added line to stop words getting smushed together (as they go onto seperate lines and some screen readers do not understand line feeds as a space */
+  white-space: nowrap;
+}
+
+:is(input, select):focus,
+:is(input, select):active {
+  @apply outline-gray-400;
+}
+
+::selection {
+  @apply text-red-500 bg-accent/30 font-bold;
+}
+
+html {
+  @apply scroll-smooth focus:outline-hidden active:outline-hidden;
+}
+h2[id] {
+  @apply scroll-m-12 lg:scroll-m-20;
+}
+li[id],
+a[id] {
+  @apply scroll-m-32 lg:scroll-m-52;
+}
+
+[x-cloak] {
+  display: none !important;
+}
+
+.markdown-doc {
+  @apply prose prose-sm lg:prose-lg print:prose-sm m-auto;
+  img {
+    @apply p-2 bg-gray-100;
+  }
+}
+
+@media print {
+}
+
+@page {
+  size: auto;
+  margin: 5mm;
+}

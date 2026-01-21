@@ -1,0 +1,30 @@
+---
+
+---
+
+<div x-data="cookieConsent" x-cloak>
+  <div
+    x-bind="dialogue"
+    class="fixed bottom-0 p-6 w-full flex justify-center z-2000">
+    <div class="bg-accent text-sm fade max-w-2xl w-full shadow-lg">
+      <div class="grid gap-2 grid-cols-1 md:grid-cols-[1fr_auto_auto] p-4 place-items-center">
+        <div class="text-white">Apologies, but we have to ask if you accept our
+          <a class="underline font-bold !text-white/50" href="/policies" target="_blank"
+            >Cookie Policy.</a
+          ></div>
+        <button
+          x-bind="decline"
+          type="button"
+          class="px-3 py-1 text-white bg-accent-dark hover:bg-accent-dark/50 ml-1.5 min-w-max"
+          >Decline</button
+        >
+        <button
+          x-bind="accept"
+          type="button"
+          class="px-3 py-1 text-white bg-accent-dark hover:bg-accent-dark/50 ml-1.5 min-w-max"
+          >Accept</button
+        >
+      </div>
+    </div>
+  </div>
+</div>

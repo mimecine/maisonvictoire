@@ -1,0 +1,28 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+type Props = HTMLAttributes<'a'> & {
+  cloak?: boolean;
+  dataAstroReload?: boolean;
+};
+
+
+
+const { href, class: className, cloak = false, dataAstroReload, ...props } = Astro.props;
+
+const { pathname } = Astro.url;
+const subpath = pathname.match(/[^\/]+/g);
+const isActive = href === pathname || href === '/' + subpath?.[0];
+---
+
+<a href={href} class:list={[className, { active: isActive }]} data-astro-reload={dataAstroReload} {...props} class="mr-0!" x-cloak={cloak}><slot /></a>
+<style>
+	a {
+		/* display: inline-block; */
+		margin: 0 0.5em;
+		text-transform: uppercase;
+	}
+	a.active {
+		font-weight: bolder;
+	}
+</style>

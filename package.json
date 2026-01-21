@@ -1,0 +1,43 @@
+{
+  "name": "maisonvictoire",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "bunx astro dev",
+    "build": "bunx astro build",
+    "preview": "bunx wrangler dev",
+    "astro": "bunx astro",
+    "sync": "bun run scrape && bun run make",
+    "scrape": "bun scripts/scrape_properties.mjs",
+    "make": "rm -rf src/content/properties && bun scripts/make_properties.mjs"
+  },
+  "dependencies": {
+    "@astrojs/alpinejs": "^0.4.9",
+    "@astrojs/cloudflare": "^12.6.12",
+    "@fontsource-variable/fredoka": "^5.2.10",
+    "@sveltia/cms": "^0.127.0",
+    "@tailwindcss/vite": "^4.1.18",
+    "@types/alpinejs": "^3.13.11",
+    "alpinejs": "^3.15.3",
+    "astro": "^5.16.7",
+    "astro-icon": "^1.1.5",
+    "tailwindcss": "^4.1.18"
+  },
+  "devDependencies": {
+    "@alpinejs/persist": "^3.15.3",
+    "@fontsource-variable/jost": "^5.2.8",
+    "@fontsource-variable/work-sans": "^5.2.8",
+    "@googlemaps/google-maps-services-js": "^3.4.2",
+    "@iconify-json/material-symbols-light": "^1.2.51",
+    "@tailwindcss/forms": "^0.5.11",
+    "@tailwindcss/typography": "^0.5.19",
+    "@types/alpinejs__persist": "^3.13.4",
+    "cheerio": "^1.1.2",
+    "crawler": "^2.0.2",
+    "detect-europe-js": "^0.1.2",
+    "dotenv": "^17.2.3",
+    "marked": "^17.0.1",
+    "sharp": "^0.34.5",
+    "yaml": "^2.8.2"
+  }
+}
