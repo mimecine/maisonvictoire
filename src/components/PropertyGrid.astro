@@ -34,7 +34,7 @@ const PriceFmt = new Intl.NumberFormat("en-GB", {
             data-land_area={property.data.land_area} >
             <div x-cloak x-show="showInfo" class="absolute grid items-center inset-0 bg-yellow-400 text-(--main-text) px-2 py-1 text-sm font-light border border-gray-400">
                     <div class="w-2/3 m-auto text-xl">
-                        To inquirie about this property, <a class="underline italic" target="email" href={`mailto:info@maisonvictoire.com?subject=Inquiry:%20${property.data.reference}%20-%20${property.data.city}`}>send us an email</a> and we will respond as soon as possible.
+                        To inquirie about this property, <a class="border-b italic" target="email" href={`mailto:info@maisonvictoire.com?subject=Inquiry:%20${property.data.reference}%20-%20${property.data.city}`}>send us an email</a> and we will respond as soon as possible.
                     </div>
             </div>
             <a name={property.id} href={property.data.status === "confidential" ? `#${property.id}` : `/properties/${property.id}`}>

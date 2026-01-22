@@ -12,11 +12,13 @@
   --color-gray-dark: var(--gray-dark);
   --color-gray-gradient: var(--gray-gradient);
   --color-box-shadow: var(--box-shadow);
+  --color-hover: rgb(201, 77, 254);
   --color-main-background: var(--main-background);
   --font-default: var(--font-family);
   --font-sans: var(--font-family), var(--font-sans);
   --font-serif: var(--font-serif);
   --font-mono: var(--font-mono);
+
 
   --font-heading: var(--font-family);
   --font-body: var(--font-family);
@@ -164,7 +166,7 @@ a {
   color: var(--accent);
 }
 a:hover {
-  color: rgb(201, 77, 254);
+  color: var(--color-hover);
   opacity: 30;
   transition: all;
   transition-duration: 100ms;
@@ -236,7 +238,7 @@ hr {
 }
 
 ::selection {
-  @apply text-red-500 bg-accent/30 font-bold;
+  @apply text-hover bg-gray-100 font-bold;
 }
 
 html {
